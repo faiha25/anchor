@@ -1,26 +1,82 @@
 @import "tailwindcss";
+@source "./**/*.{js,ts,jsx,tsx}";
+@source "../app/**/*.{js,ts,jsx,tsx}";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+@theme {
+ 
+  --color-canvas: #FAF9F7;        /* app background — warm off-white */
+  --color-surface: #FFFFFF;       /* raised content */
+  --color-ink: #1C1B1A;           /* primary text — near-black */
+  --color-ink-soft: #6B6862;      /* secondary text */
+  --color-hairline: #E8E5E0;      /* borders */
+
+  --color-accent: #1F5C5A;
+  --color-accent-ink: #163F3E;    /* darker teal for hover/press */
+  --color-accent-tint: #EAF1F0;   /* teal background wash */
+
+  --color-urgent: #B8742A;
+  --color-urgent-tint: #FAF1E6;
+
+  /* Caution — deep brick for the one "mistake to avoid" block */
+  --color-caution: #9A3B2E;
+  --color-caution-tint: #F8ECEA;
+
+  /* Type families (Geist is already loaded in layout.tsx) */
+  --font-sans: var(--font-geist-sans), system-ui, sans-serif;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+/* BASE */
+html {
+  -webkit-text-size-adjust: 100%;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--color-canvas);
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+  font-size: 17px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    transition-duration: 0.001ms !important;
+  }
+}
+
+@keyframes anchor-fade-up {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.anchor-enter {
+  animation: anchor-fade-up 300ms ease-out both;
+}
+
+
+.case-file {
+  display: none;
+}
+
+@media print {
+  .app-view {
+    display: none !important;
+  }
+  .case-file {
+    display: block !important;
+  }
+  @page {
+    margin: 1.5cm;
+  }
 }

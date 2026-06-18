@@ -1,0 +1,140 @@
+{
+    "nonpayment_eviction": {
+      "label": "Behind on rent / landlord starting a case",
+      "case_type_note": "Covers NONPAYMENT cases only. The right next step depends heavily on which stage the person is at, identified by which paper they have.",
+      "high_leverage_question": {
+        "text": "Which paper do you have in front of you right now?",
+        "options": [
+          "A demand for overdue rent, with no court date on it yet",
+          "Court papers called a Notice of Petition and Petition, or a postcard from the court",
+          "A Notice of Eviction from a City Marshal",
+          "I am not sure what I have"
+        ],
+        "why": "A rent demand, a court petition, and a marshal's Notice of Eviction are three different stages with completely different next steps. Which one the person holds decides everything that follows."
+      },
+      "deadline_flag": "Sources disagree on the exact number of days to answer a petition. Never state a specific number. Always tell the user to confirm their exact deadline immediately with the court or the Tenant Helpline.",
+      "stages": {
+        "rent_demand": {
+          "match": "A demand for overdue rent, with no court date on it yet",
+          "urgent": "This is an early stage and you likely have some time, but act now: start applying for rent help today, because a pending rent-assistance application can offer temporary protection before any court case begins.",
+          "next_48h": [
+            "Take a clear photo of every page of the demand and write down the date you received it",
+            "Call 311 and say 'Tenant Helpline' to reach free guidance and free legal help",
+            "Begin a rent-relief application: ERAP through the OTDA portal, or HRA's One Shot Deal at 718-557-1399"
+          ],
+          "this_week": [
+            "Gather rent receipts, payment records, and any Section 8 or public assistance paperwork",
+            "Contact Housing Court Answers at 212-962-4795 if you have a good reason for falling behind, to be referred to rent-arrears help",
+            "Watch your mail closely for court papers, which may come next if the demand is not resolved"
+          ],
+          "mistakes": [
+            "Do not ignore the demand hoping it goes away. Resolving it now is easier than after a court case starts.",
+            "Do not leave your home because of this paper alone. A demand is not a court order, and moving out early is hard to undo.",
+            "Do not take a high-cost loan to pay before checking whether rent assistance can help first."
+          ]
+        },
+        "court_papers": {
+          "match": "Court papers called a Notice of Petition and Petition, or a postcard from the court",
+          "urgent": "A court case has started. The most urgent thing is to answer the petition in person at the Landlord-Tenant Clerk's office, and to confirm your exact deadline right away, because missing it can lead to losing by default.",
+          "next_48h": [
+            "Confirm your exact answer deadline today by calling 311 and saying 'Tenant Helpline', or the court directly",
+            "Take a clear photo of every page of the court papers and note the date you received them",
+            "Go to the Landlord-Tenant Clerk's office to answer the petition in person and state your defenses"
+          ],
+          "this_week": [
+            "Gather everything that supports your side: rent receipts, payment records, photos of any repair problems, program paperwork",
+            "Ask about free legal representation, which may be available in every ZIP code regardless of immigration status",
+            "Note your court date, time, and room from the answer form, and plan to arrive early"
+          ],
+          "mistakes": [
+            "Do not ignore the petition or a court postcard. Missing the answer deadline can lead to a default judgment against you.",
+            "Do not skip the court date. Not appearing can mean the judge decides without hearing your side.",
+            "Do not sign a stipulation you cannot keep. It is a judge-signed promise with real consequences if broken.",
+            "Do not leave your home before a court process requires it. This is hard to undo."
+          ]
+        },
+        "marshal_notice": {
+          "match": "A Notice of Eviction from a City Marshal",
+          "urgent": "This is the final stage and time is very short. Call the marshal's number printed on the notice right now to learn the timing, and go to the Landlord-Tenant Clerk's office immediately to ask a judge for an Order to Show Cause, which can pause the eviction.",
+          "next_48h": [
+            "Call the marshal's phone number on the notice today and ask when the eviction is scheduled",
+            "Go to the Landlord-Tenant Clerk's office right away and ask for an Order to Show Cause with a stay of the eviction",
+            "Call 311 and say 'Tenant Helpline' for urgent free help, and tell them an eviction is already scheduled"
+          ],
+          "this_week": [
+            "Bring any proof relevant to your situation when you go to court for the Order to Show Cause",
+            "If you or someone you live with is elderly or disabled, tell the court and the marshal, as extra protections may apply",
+            "Ask the Housing Court Help Center, free in every borough, for help preparing your papers"
+          ],
+          "mistakes": [
+            "Do not assume nothing can be done. Going to court right away for an Order to Show Cause may pause the eviction.",
+            "Do not wait to act. At this stage the time before an eviction is very short.",
+            "Do not leave your belongings or move out without getting advice first, even now. Speak to a person immediately."
+          ]
+        },
+        "not_sure": {
+          "match": "I am not sure what I have",
+          "urgent": "The single most important thing right now is to find out exactly which paper you have, because the right next step depends entirely on it. Free help can tell you in minutes.",
+          "next_48h": [
+            "Take a clear photo of every page of the paper and note the date you received it",
+            "Call 311 and say 'Tenant Helpline', or Housing Court Answers at 212-962-4795, and read them what the paper says",
+            "Ask them to tell you whether it is a rent demand, court papers, or a marshal's notice"
+          ],
+          "this_week": [
+            "Once you know which paper it is, follow the steps for that specific stage",
+            "Gather rent receipts, payment records, and any program paperwork while you wait for guidance",
+            "Do not let the paper sit unread; the stage it represents may be time-sensitive"
+          ],
+          "mistakes": [
+            "Do not guess at what the paper means and act on the guess. Confirm with a person first.",
+            "Do not ignore it because you are unsure. Some stages have short deadlines.",
+            "Do not leave your home based on a paper you do not yet understand. This is hard to undo."
+          ]
+        }
+      },
+      "route_to_human": "NYC Tenant Helpline: call 311 and say 'Tenant Helpline'. Housing Court Answers arrears hotline: 212-962-4795. Free Housing Court Help Center in every borough. Free legal representation may be available in every ZIP code regardless of immigration status under NYC's Right-to-Counsel law.",
+      "sources": [
+        "https://housingcourtanswers.org/answers/for-tenants/",
+        "https://www.nyc.gov/site/hpd/services-and-information/eviction-prevention.page",
+        "NY State Courts: New York City Tenants Questions and Answers About Housing Court, Access to Justice, November 2016"
+      ]
+    },
+  
+    "unsafe_conditions_repairs": {
+      "label": "Unsafe conditions / landlord will not make repairs",
+      "case_type_note": "Covers repair and habitability situations in NYC rental housing. This is different from an eviction case. Here the tenant is usually the one who can start a court case.",
+      "high_leverage_question": {
+        "text": "Have you already told your landlord or building superintendent about the problem in writing?",
+        "options": [
+          "Yes, I told them in writing and kept a copy",
+          "I told them, but only by speaking or text",
+          "No, I have not told them yet",
+          "It is an emergency right now, like no heat, no water, or a fire hazard"
+        ],
+        "why": "The next step depends entirely on whether a written record exists and whether the condition is an emergency. A documented complaint and an emergency condition lead to faster and stronger options."
+      },
+      "deadline_flag": "There is no single fixed deadline for repair issues, but emergencies are time-sensitive. Do not state legal timeframes. For dangerous conditions, route the user to call 311 and seek help immediately.",
+      "steps_urgent": "If the condition is dangerous right now, such as no heat or hot water, no electricity, flooding, or a fire hazard, call 311 and ask for a housing inspection right away. For a true emergency, treat it as one.",
+      "steps_next_48h": [
+        "Write down every problem and how long each one has existed",
+        "Take clear, dated photos of every condition you want on record",
+        "Tell the landlord or superintendent in writing if you have not already, and keep a copy"
+      ],
+      "steps_this_week": [
+        "Send the written complaint to the landlord by certified mail with return receipt, so you have proof it was received",
+        "Call 311 to request a housing inspection, which can be done without going to court",
+        "If repairs are still not made, consider starting an HP case at Housing Court, which asks the court to order the repairs"
+      ],
+      "mistakes_to_avoid": [
+        "Do not rely only on phone calls or texts. Without a written, dated record, it is harder to prove you reported the problem.",
+        "Do not assume stopping rent is safe. Whether withholding rent is wise depends on your situation and is hard to undo, so confirm with a person before doing it.",
+        "Do not wait on a dangerous condition. No heat, no water, or a fire hazard should be reported to 311 immediately, not after delay.",
+        "Do not throw away receipts or bills. Money you spend because of the conditions may matter later, so keep everything."
+      ],
+      "route_to_human": "Call 311 to request a housing inspection or to report no heat or hot water. The Housing Court Help Center, free in every borough, can explain how to start an HP case. The DHPD Tenant Assistance Unit can help with serious building-wide problems at 212-863-7356.",
+      "sources": [
+        "NY State Courts: New York City Tenants Questions and Answers About Housing Court, Access to Justice, November 2016, housing repairs section",
+        "https://www.nyc.gov/site/hpd/services-and-information/eviction-prevention.page"
+      ]
+    }
+  }
