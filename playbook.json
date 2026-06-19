@@ -1,7 +1,9 @@
 {
     "nonpayment_eviction": {
       "label": "Behind on rent / landlord starting a case",
-      "case_type_note": "Covers NONPAYMENT cases only. The right next step depends heavily on which stage the person is at, identified by which paper they have.",
+      "last_verified": "2026-06",
+      "source_tier": 1,
+      "case_type_note": "Covers NONPAYMENT cases only. The right next step depends heavily on which stage the person is at.",
       "high_leverage_question": {
         "text": "Which paper do you have in front of you right now?",
         "options": [
@@ -10,9 +12,9 @@
           "A Notice of Eviction from a City Marshal",
           "I am not sure what I have"
         ],
-        "why": "A rent demand, a court petition, and a marshal's Notice of Eviction are three different stages with completely different next steps. Which one the person holds decides everything that follows."
+        "why": "A rent demand, a court petition, and a marshal's Notice of Eviction are three different stages with completely different next steps."
       },
-      "deadline_flag": "Sources disagree on the exact number of days to answer a petition. Never state a specific number. Always tell the user to confirm their exact deadline immediately with the court or the Tenant Helpline.",
+      "deadline_flag": "Sources disagree on the exact number of days to answer a petition. Never state a specific number. Tell the user to confirm their exact deadline immediately with the court or the Tenant Helpline.",
       "stages": {
         "rent_demand": {
           "match": "A demand for overdue rent, with no court date on it yet",
@@ -69,12 +71,12 @@
           "mistakes": [
             "Do not assume nothing can be done. Going to court right away for an Order to Show Cause may pause the eviction.",
             "Do not wait to act. At this stage the time before an eviction is very short.",
-            "Do not leave your belongings or move out without getting advice first, even now. Speak to a person immediately."
+            "Do not leave your belongings or move out without getting advice first. Speak to a person immediately."
           ]
         },
         "not_sure": {
           "match": "I am not sure what I have",
-          "urgent": "The single most important thing right now is to find out exactly which paper you have, because the right next step depends entirely on it. Free help can tell you in minutes.",
+          "urgent": "The most important thing right now is to find out exactly which paper you have, because the right next step depends entirely on it. Free help can tell you in minutes.",
           "next_48h": [
             "Take a clear photo of every page of the paper and note the date you received it",
             "Call 311 and say 'Tenant Helpline', or Housing Court Answers at 212-962-4795, and read them what the paper says",
@@ -100,8 +102,293 @@
       ]
     },
   
+    "holdover_eviction": {
+      "label": "Landlord wants you out (lease ended or claimed lease violation)",
+      "last_verified": "2026-06",
+      "source_tier": 1,
+      "case_type_note": "Covers HOLDOVER cases, which are different from owing rent. The landlord wants the apartment back, often after a lease ends or because of a claimed violation. Only a court can order an eviction.",
+      "high_leverage_question": {
+        "text": "What has the landlord given you so far?",
+        "options": [
+          "A written notice saying to fix something or to move out by a date",
+          "Court papers called a Notice of Petition and Petition",
+          "Only spoken words, no written notice yet",
+          "I am not sure what I have"
+        ],
+        "why": "A written notice, court papers, and only-spoken words are different stages of a holdover case, and each one has a different next step."
+      },
+      "deadline_flag": "Notice periods and answer deadlines vary by situation. Never state a specific number of days. Tell the user to confirm their exact deadline with the court or the Tenant Helpline.",
+      "stages": {
+        "written_notice": {
+          "match": "A written notice saying to fix something or to move out by a date",
+          "urgent": "You have a written notice, but a notice is not a court order and you cannot be removed without a court case. If the notice asks you to fix something, you may have time to fix it. Confirm what the notice means with free help before acting.",
+          "next_48h": [
+            "Take a clear photo of every page of the notice and write down the date you received it",
+            "Call 311 and say 'Tenant Helpline' to understand what type of notice this is and what it means",
+            "If the notice asks you to fix a problem, start fixing it and keep proof"
+          ],
+          "this_week": [
+            "Gather your lease, any lease renewals, and records of your tenancy",
+            "Ask about free legal representation, which may be available in every ZIP code regardless of immigration status",
+            "Watch your mail for court papers, which may come next if the matter is not resolved"
+          ],
+          "mistakes": [
+            "Do not move out just because of a notice. A notice is not a court order, and leaving early is hard to undo.",
+            "Do not ignore the notice. If it asks you to fix something, missing the chance to fix it can lead to a case.",
+            "Do not assume you have no rights because your lease ended. Only a court can order you out."
+          ]
+        },
+        "court_papers": {
+          "match": "Court papers called a Notice of Petition and Petition",
+          "urgent": "A holdover court case has started. The most urgent thing is to come to court on your court date and tell the judge your side, and to confirm your exact deadline with free help right away.",
+          "next_48h": [
+            "Confirm your court date and any answer deadline today by calling 311 and saying 'Tenant Helpline'",
+            "Take a clear photo of every page of the court papers and note the date you received them",
+            "Write down your reasons the landlord should not be able to make you move"
+          ],
+          "this_week": [
+            "Gather your lease, renewals, and any proof that supports your side",
+            "Ask about free legal representation through NYC's Right-to-Counsel law",
+            "Plan to arrive early on your court date and bring all your papers"
+          ],
+          "mistakes": [
+            "Do not skip the court date. If you do not go, the judge may decide without hearing your side.",
+            "Do not move out before the court process requires it. This is hard to undo.",
+            "Do not sign anything in court you do not understand. Ask the court attorney to explain it."
+          ]
+        },
+        "verbal_only": {
+          "match": "Only spoken words, no written notice yet",
+          "urgent": "Spoken words are not a legal eviction. You cannot be removed without a written process and a court case. The most useful thing now is to document what was said and learn your actual rights from free help.",
+          "next_48h": [
+            "Write down exactly what was said, by whom, and when, while it is fresh",
+            "Call 311 and say 'Tenant Helpline' to understand what can and cannot happen without a court case",
+            "Do not agree to leave or sign anything based only on spoken pressure"
+          ],
+          "this_week": [
+            "Gather your lease, renewals, and proof you live there, such as mail and bills",
+            "Keep a simple log of any further conversations or pressure",
+            "Ask free legal help what a proper notice would have to look like in your situation"
+          ],
+          "mistakes": [
+            "Do not move out because you were told to verbally. Only a court can order you out, and leaving early is hard to undo.",
+            "Do not let spoken threats rush you into a decision. Confirm your rights with a person first.",
+            "Do not stop documenting. A written record protects you if this becomes a case."
+          ]
+        },
+        "not_sure": {
+          "match": "I am not sure what I have",
+          "urgent": "The most important thing right now is to find out exactly what you have been given, because each stage of a holdover case has a different next step. Free help can tell you quickly.",
+          "next_48h": [
+            "Take a clear photo of anything in writing you have received and note the date",
+            "Call 311 and say 'Tenant Helpline', or Housing Court Answers at 212-962-4795",
+            "Read them what you have and ask them to tell you what stage you are at"
+          ],
+          "this_week": [
+            "Once you know what you have, follow the steps for that stage",
+            "Gather your lease, renewals, and proof you live there",
+            "Do not delay; some stages can be time-sensitive"
+          ],
+          "mistakes": [
+            "Do not guess and act on the guess. Confirm with a person first.",
+            "Do not move out based on something you do not yet understand. This is hard to undo.",
+            "Do not ignore written papers; they may have deadlines."
+          ]
+        }
+      },
+      "route_to_human": "NYC Tenant Helpline: call 311 and say 'Tenant Helpline'. Housing Court Answers: 212-962-4795. Free Housing Court Help Center in every borough. Free legal representation may be available in every ZIP code regardless of immigration status under NYC's Right-to-Counsel law.",
+      "sources": [
+        "https://housingcourtanswers.org/answers/for-tenants/",
+        "NY State Courts: New York City Tenants Questions and Answers About Housing Court, Access to Justice, November 2016, holdover section"
+      ]
+    },
+  
+    "illegal_lockout": {
+      "label": "Locked out, or utilities shut off, to force you out",
+      "last_verified": "2026-06",
+      "source_tier": 1,
+      "case_type_note": "If you have lived in your home for more than 30 days, a landlord cannot lock you out or shut off your utilities to force you to leave without a court order. This is an emergency.",
+      "high_leverage_question": {
+        "text": "What is happening right now?",
+        "options": [
+          "My locks were changed and I cannot get into my home",
+          "My heat, water, or electricity was shut off to force me out",
+          "My belongings were removed or thrown out",
+          "I am being threatened with a lockout but it has not happened yet"
+        ],
+        "why": "A lockout, a utility shut-off, and a threat are different situations, but if you have lived there over 30 days, all of them are handled through the police and the court, not by leaving."
+      },
+      "deadline_flag": "This is time-sensitive. Do not state legal timeframes. Route the user to call the police and seek help immediately.",
+      "stages": {
+        "locked_out": {
+          "match": "My locks were changed and I cannot get into my home",
+          "urgent": "If you have lived in your home for more than 30 days, this lockout is not legal without a court order. Call the police now, they may be able to order the landlord to let you back in. Then you can start an illegal lockout case in Housing Court.",
+          "next_48h": [
+            "Call the police and tell them you have been locked out of your home where you live",
+            "Bring proof you live there if you can: your lease, mail addressed to you, rent receipts, or bills",
+            "Go to the Landlord-Tenant Clerk's office to start an illegal lockout case with an Order to Show Cause"
+          ],
+          "this_week": [
+            "Keep every receipt for money you spend because of the lockout, such as a hotel or food",
+            "Call 311 and say 'Tenant Helpline' for free guidance and legal help",
+            "Bring your proof of residence and proof of service to your court date"
+          ],
+          "mistakes": [
+            "Do not assume the lockout is allowed. If you have lived there over 30 days, only a court can remove you.",
+            "Do not give up your home. Acting quickly through the police and court may get you back in.",
+            "Do not throw away receipts. You may be able to recover money you had to spend."
+          ]
+        },
+        "utilities_off": {
+          "match": "My heat, water, or electricity was shut off to force me out",
+          "urgent": "Shutting off your essential services to force you out is not legal. Call the police, and call 311 to report the loss of heat, hot water, or electricity. This can also be part of a harassment case.",
+          "next_48h": [
+            "Call 311 to report no heat, no hot water, or no electricity and ask for an inspection",
+            "Call the police if services were shut off deliberately to force you out",
+            "Write down when each service was shut off and take photos or notes as proof"
+          ],
+          "this_week": [
+            "Call 311 and say 'Tenant Helpline' to learn about starting a case",
+            "Keep proof of any money you spend because of the shut-off",
+            "Ask the Housing Court Help Center about a harassment or repair case"
+          ],
+          "mistakes": [
+            "Do not leave because services were cut. This is a tactic, not a legal eviction.",
+            "Do not delay reporting. Loss of heat or water is treated as serious.",
+            "Do not stop documenting. Dates and photos strengthen your case."
+          ]
+        },
+        "belongings_removed": {
+          "match": "My belongings were removed or thrown out",
+          "urgent": "If you have lived in your home for more than 30 days, removing your belongings to force you out is not legal without a court order. Call the police now and seek free legal help immediately.",
+          "next_48h": [
+            "Call the police and report that your belongings were removed from your home",
+            "Take photos of anything you can, and write down what is missing and when it happened",
+            "Go to the Landlord-Tenant Clerk's office about an illegal lockout case"
+          ],
+          "this_week": [
+            "Keep a list and proof of what was taken or damaged",
+            "Call 311 and say 'Tenant Helpline' for legal help",
+            "Ask the Help Center whether you can recover the value of what you lost"
+          ],
+          "mistakes": [
+            "Do not assume nothing can be done. Courts treat illegal removal seriously.",
+            "Do not delay. Acting quickly matters.",
+            "Do not throw away any proof of what you owned or what you spent."
+          ]
+        },
+        "threatened": {
+          "match": "I am being threatened with a lockout but it has not happened yet",
+          "urgent": "A threat is not a legal eviction. If you have lived there over 30 days, the landlord cannot lock you out without a court order. Document the threat and learn your rights now so you are ready.",
+          "next_48h": [
+            "Write down exactly what was threatened, by whom, and when",
+            "Call 311 and say 'Tenant Helpline' to understand your protections",
+            "Make sure you have proof you live there: lease, mail, rent receipts"
+          ],
+          "this_week": [
+            "Keep a log of any further threats or pressure",
+            "Ask free legal help what to do immediately if a lockout actually happens",
+            "Save the police non-emergency number in case you need it quickly"
+          ],
+          "mistakes": [
+            "Do not move out because of a threat. Only a court can order you out.",
+            "Do not let a threat rush your decisions. Confirm your rights first.",
+            "Do not stop documenting; a record protects you."
+          ]
+        }
+      },
+      "route_to_human": "Call the police if you are locked out or your belongings were removed. Call 311 and say 'Tenant Helpline', or report no heat, hot water, or electricity. Free Housing Court Help Center in every borough.",
+      "sources": [
+        "https://housingcourtanswers.org/answers/for-tenants/",
+        "NY State Courts: New York City Tenants Questions and Answers About Housing Court, Access to Justice, November 2016, illegal lockout section"
+      ]
+    },
+  
+    "income_loss_risk": {
+      "label": "Lost income, worried about paying rent soon",
+      "last_verified": "2026-06",
+      "source_tier": 2,
+      "case_type_note": "Covers people who have lost income and are worried about upcoming rent but are not yet behind or facing a case. Acting early can prevent a crisis.",
+      "high_leverage_question": {
+        "text": "Where are you right now with rent?",
+        "options": [
+          "I am still current but worried about the next payment",
+          "I have just missed a payment for the first time",
+          "I have already received a paper about owing rent"
+        ],
+        "why": "Acting before you fall behind opens up more options, so it matters whether you are still current, just missed a payment, or have already received a paper."
+      },
+      "deadline_flag": "There is no fixed legal deadline at this stage, but applying for help early is important. Do not state legal timeframes.",
+      "stages": {
+        "still_current": {
+          "match": "I am still current but worried about the next payment",
+          "urgent": "You have the most options right now because you are acting early. Start applying for emergency assistance today so help may be in place before a payment is missed.",
+          "next_48h": [
+            "Apply for HRA's One Shot Deal emergency assistance by calling 718-557-1399 or using ACCESSHRA",
+            "Call 311 and ask about Homebase, which helps make a plan to keep your housing stable",
+            "Look into ERAP rent relief through the OTDA portal"
+          ],
+          "this_week": [
+            "Gather proof of your income change, such as a layoff letter or reduced pay records",
+            "Talk to your landlord in writing about your situation before a payment is missed",
+            "Keep copies of every application and any responses you receive"
+          ],
+          "mistakes": [
+            "Do not wait until you are behind to ask for help. Early action opens more options.",
+            "Do not avoid your landlord. A written conversation now is easier than after a missed payment.",
+            "Do not take a high-cost loan before checking what assistance you can get."
+          ]
+        },
+        "just_missed": {
+          "match": "I have just missed a payment for the first time",
+          "urgent": "Act now: apply for emergency rent assistance today, because a pending application can help and acting before a court case starts keeps more options open.",
+          "next_48h": [
+            "Apply for HRA's One Shot Deal at 718-557-1399, and for ERAP through the OTDA portal",
+            "Call 311 and ask about Homebase to make a stability plan",
+            "Tell your landlord in writing that you are seeking assistance"
+          ],
+          "this_week": [
+            "Gather rent records, proof of income loss, and any assistance paperwork",
+            "Call Housing Court Answers at 212-962-4795 if you have a good reason for falling behind",
+            "Watch your mail closely in case a rent demand arrives"
+          ],
+          "mistakes": [
+            "Do not ignore the missed payment. Addressing it early is easier.",
+            "Do not move out preemptively. You are not facing a court order.",
+            "Do not skip applying for help because you assume you will not qualify."
+          ]
+        },
+        "already_behind": {
+          "match": "I have already received a paper about owing rent",
+          "urgent": "You may now be at the start of a nonpayment process. The most urgent thing is to apply for rent help today and find out exactly which paper you have, because a pending application can offer temporary protection.",
+          "next_48h": [
+            "Take a clear photo of the paper and note the date you received it",
+            "Call 311 and say 'Tenant Helpline' to find out what the paper is and what it means",
+            "Apply for ERAP and HRA's One Shot Deal at 718-557-1399"
+          ],
+          "this_week": [
+            "Gather rent receipts, payment records, and proof of income loss",
+            "Contact Housing Court Answers at 212-962-4795 for rent-arrears referrals",
+            "Follow the steps for the specific paper once you know what it is"
+          ],
+          "mistakes": [
+            "Do not ignore the paper. Some papers have short deadlines.",
+            "Do not leave your home because of a paper alone. A demand is not a court order.",
+            "Do not delay applying for assistance; a pending application can protect you."
+          ]
+        }
+      },
+      "route_to_human": "Call 311 and say 'Tenant Helpline' or ask about Homebase. HRA Infoline for emergency assistance: 718-557-1399. Housing Court Answers: 212-962-4795.",
+      "sources": [
+        "https://www.nyc.gov/site/hpd/services-and-information/eviction-prevention.page",
+        "NYC HRA emergency assistance / One Shot Deal and Homebase program information"
+      ]
+    },
+  
     "unsafe_conditions_repairs": {
       "label": "Unsafe conditions / landlord will not make repairs",
+      "last_verified": "2026-06",
+      "source_tier": 1,
       "case_type_note": "Covers repair and habitability situations in NYC rental housing. This is different from an eviction case. Here the tenant is usually the one who can start a court case.",
       "high_leverage_question": {
         "text": "Have you already told your landlord or building superintendent about the problem in writing?",
@@ -111,30 +398,317 @@
           "No, I have not told them yet",
           "It is an emergency right now, like no heat, no water, or a fire hazard"
         ],
-        "why": "The next step depends entirely on whether a written record exists and whether the condition is an emergency. A documented complaint and an emergency condition lead to faster and stronger options."
+        "why": "The next step depends on whether a written record exists and whether the condition is an emergency."
       },
-      "deadline_flag": "There is no single fixed deadline for repair issues, but emergencies are time-sensitive. Do not state legal timeframes. For dangerous conditions, route the user to call 311 and seek help immediately.",
-      "steps_urgent": "If the condition is dangerous right now, such as no heat or hot water, no electricity, flooding, or a fire hazard, call 311 and ask for a housing inspection right away. For a true emergency, treat it as one.",
-      "steps_next_48h": [
-        "Write down every problem and how long each one has existed",
-        "Take clear, dated photos of every condition you want on record",
-        "Tell the landlord or superintendent in writing if you have not already, and keep a copy"
-      ],
-      "steps_this_week": [
-        "Send the written complaint to the landlord by certified mail with return receipt, so you have proof it was received",
-        "Call 311 to request a housing inspection, which can be done without going to court",
-        "If repairs are still not made, consider starting an HP case at Housing Court, which asks the court to order the repairs"
-      ],
-      "mistakes_to_avoid": [
-        "Do not rely only on phone calls or texts. Without a written, dated record, it is harder to prove you reported the problem.",
-        "Do not assume stopping rent is safe. Whether withholding rent is wise depends on your situation and is hard to undo, so confirm with a person before doing it.",
-        "Do not wait on a dangerous condition. No heat, no water, or a fire hazard should be reported to 311 immediately, not after delay.",
-        "Do not throw away receipts or bills. Money you spend because of the conditions may matter later, so keep everything."
-      ],
+      "deadline_flag": "There is no single fixed deadline for repair issues, but emergencies are time-sensitive. Do not state legal timeframes. For dangerous conditions, route the user to call 311 immediately.",
+      "stages": {
+        "told_in_writing": {
+          "match": "Yes, I told them in writing and kept a copy",
+          "urgent": "You have done the most important first step by creating a written record. Now, if repairs are still not made, you can ask the city to inspect and can start a court case to order the repairs.",
+          "next_48h": [
+            "Call 311 to request a housing inspection, which can be done without going to court",
+            "Take clear, dated photos of every condition you want on record",
+            "Keep your written complaint and any reply together in one place"
+          ],
+          "this_week": [
+            "If repairs are still not made, consider starting an HP case at Housing Court to order them",
+            "Ask the Housing Court Help Center, free in every borough, how to start an HP case",
+            "Keep receipts for anything you spend because of the conditions"
+          ],
+          "mistakes": [
+            "Do not stop paying rent without advice. Whether withholding is wise depends on your situation and is hard to undo.",
+            "Do not lose your written record. It is your strongest proof.",
+            "Do not delay on dangerous conditions; report those to 311 immediately."
+          ]
+        },
+        "told_verbally": {
+          "match": "I told them, but only by speaking or text",
+          "urgent": "The most useful step now is to put your complaint in writing and keep a copy, because a written, dated record is much stronger proof than a phone call.",
+          "next_48h": [
+            "Write down every problem and how long each has existed, then send it to the landlord in writing",
+            "Send it by certified mail with return receipt if you can, and keep the receipt",
+            "Take clear, dated photos of every condition"
+          ],
+          "this_week": [
+            "Call 311 to request a housing inspection",
+            "If repairs are still not made, ask the Help Center about starting an HP case",
+            "Keep all proof together in one place"
+          ],
+          "mistakes": [
+            "Do not rely only on calls or texts. A written, dated record is far stronger.",
+            "Do not stop paying rent without advice; it is hard to undo.",
+            "Do not wait on dangerous conditions; report to 311 immediately."
+          ]
+        },
+        "not_told_yet": {
+          "match": "No, I have not told them yet",
+          "urgent": "The first step is to notify your landlord or superintendent in writing, because most repair processes start with a documented complaint.",
+          "next_48h": [
+            "Write a list of every problem and how long each has existed",
+            "Send it to the landlord in writing and keep a copy, ideally by certified mail",
+            "Take clear, dated photos of every condition"
+          ],
+          "this_week": [
+            "If there is no response, call 311 to request a housing inspection",
+            "Ask the Help Center about an HP case if repairs are still not made",
+            "Keep all proof together"
+          ],
+          "mistakes": [
+            "Do not skip the written notice; it is usually the required first step.",
+            "Do not stop paying rent without advice.",
+            "Do not delay on dangerous conditions; report to 311 immediately."
+          ]
+        },
+        "emergency": {
+          "match": "It is an emergency right now, like no heat, no water, or a fire hazard",
+          "urgent": "This is dangerous and time-sensitive. Call 311 right now to report the emergency condition and ask for a housing inspection. Treat it as an emergency.",
+          "next_48h": [
+            "Call 311 immediately to report no heat, no hot water, no electricity, flooding, or a fire hazard",
+            "Take dated photos and write down when the condition started",
+            "Tell the landlord or superintendent in writing as well, and keep a copy"
+          ],
+          "this_week": [
+            "If the emergency is not fixed, ask the Help Center about an emergency HP case for a faster court date",
+            "Keep receipts for anything you must spend because of the condition",
+            "Keep all proof and dates together"
+          ],
+          "mistakes": [
+            "Do not wait on a dangerous condition. Report it to 311 immediately.",
+            "Do not stop paying rent without advice, even now; it is hard to undo.",
+            "Do not assume the landlord will act without a record; document everything."
+          ]
+        }
+      },
       "route_to_human": "Call 311 to request a housing inspection or to report no heat or hot water. The Housing Court Help Center, free in every borough, can explain how to start an HP case. The DHPD Tenant Assistance Unit can help with serious building-wide problems at 212-863-7356.",
       "sources": [
         "NY State Courts: New York City Tenants Questions and Answers About Housing Court, Access to Justice, November 2016, housing repairs section",
         "https://www.nyc.gov/site/hpd/services-and-information/eviction-prevention.page"
       ]
-    }
+    },
+  "landlord_harassment": {
+    "label": "Landlord is harassing you to make you leave",
+    "last_verified": "2026-06",
+    "source_tier": 1,
+    "case_type_note": "Covers harassment by a landlord meant to force you out, such as repeated baseless cases, shutting off services after a complaint, abusive buyout offers, or removing your door or lock. Only a court can actually evict you.",
+    "high_leverage_question": {
+      "text": "What is the landlord doing?",
+      "options": [
+        "Shutting off heat, water, or other services after I complained",
+        "Pressuring me to take money to move out (a buyout)",
+        "Threatening me, or taking me to court over and over",
+        "Something else that feels meant to force me out"
+      ],
+      "why": "Different kinds of harassment have different protections and different first steps, so it helps to know what the landlord is actually doing."
+    },
+    "deadline_flag": "There is no single deadline, but document everything as it happens. Do not state legal timeframes.",
+    "steps_urgent": "Start writing down every incident with the date, what happened, and who was involved, because a clear record is what makes a harassment case possible. If services like heat or water were shut off, call 311 to report it right away.",
+    "steps_next_48h": [
+      "Write down each incident: the date, what happened, and any witnesses",
+      "If heat, water, or electricity was shut off, call 311 to report it and ask for an inspection",
+      "Call 311 and say 'Tenant Helpline' for free guidance on a harassment case"
+    ],
+    "steps_this_week": [
+      "Keep copies of any texts, letters, or notices from the landlord",
+      "If you received a written buyout offer, keep it; you can tell the landlord in writing to stop offering for a period of time",
+      "Ask the Housing Court Help Center, free in every borough, about starting a harassment case"
+    ],
+    "mistakes_to_avoid": [
+      "Do not move out because of pressure or threats. Only a court can evict you, and leaving early is hard to undo.",
+      "Do not stop documenting. Dates and details are what make a harassment case work.",
+      "Do not accept a buyout on the spot. You are allowed to say no, to take time, and to get advice first."
+    ],
+    "route_to_human": "Call 311 and say 'Tenant Helpline', or report no heat, hot water, or electricity. Metropolitan Council on Housing: 212-979-0611. Free Housing Court Help Center in every borough. The New York State Division of Human Rights handles discrimination at 718-741-8400.",
+    "sources": [
+      "NY State Courts: New York City Tenants Questions and Answers About Housing Court, Access to Justice, November 2016, harassment section",
+      "HCR Fact Sheet #17: Harassment, hcr.ny.gov"
+    ]
+  },
+  "verbal_threat_no_notice": {
+    "label": "Landlord told you to leave, but gave no written notice",
+    "last_verified": "2026-06",
+    "source_tier": 1,
+    "case_type_note": "Covers being told to leave verbally, with no written notice and no court papers. Spoken words are not a legal eviction. You cannot be removed without a written process and a court case.",
+    "high_leverage_question": {
+      "text": "Has the landlord given you anything in writing at all?",
+      "options": [
+        "No, only spoken words so far",
+        "A text or email telling me to leave",
+        "I am being threatened but nothing has happened yet"
+      ],
+      "why": "Whether anything exists in writing changes what stage you are at, but in every case spoken pressure alone is not a legal eviction."
+    },
+    "deadline_flag": "There is no legal deadline from a verbal threat alone. Do not state legal timeframes. The key point is that spoken words are not a legal eviction.",
+    "steps_urgent": "Spoken words are not a legal eviction. You cannot be made to leave without a written process and a court case. The most useful thing now is to write down exactly what was said and learn your actual rights from free help before doing anything.",
+    "steps_next_48h": [
+      "Write down exactly what was said, by whom, and when, while it is fresh",
+      "Save any texts or emails as proof, and do not delete them",
+      "Call 311 and say 'Tenant Helpline' to learn what can and cannot happen without a court case"
+    ],
+    "steps_this_week": [
+      "Gather your lease, any renewals, and proof you live there such as mail and bills",
+      "Keep a simple log of any further pressure or threats",
+      "Ask free legal help what a proper written notice would have to look like in your situation"
+    ],
+    "mistakes_to_avoid": [
+      "Do not move out because you were told to verbally. Only a court can order you out, and leaving early is hard to undo.",
+      "Do not let spoken threats rush you into signing anything or agreeing to leave.",
+      "Do not stop documenting. A written record protects you if this becomes a case."
+    ],
+    "route_to_human": "Call 311 and say 'Tenant Helpline'. Free Housing Court Help Center in every borough. Metropolitan Council on Housing: 212-979-0611. If you are locked out, call 911.",
+    "sources": [
+      "NY State Courts: New York City Tenants Questions and Answers About Housing Court, Access to Justice, November 2016",
+      "NY State Attorney General Residential Tenants Rights Guide"
+    ]
+  },
+  "court_notice_received": {
+    "label": "You received court papers about your housing",
+    "last_verified": "2026-06",
+    "source_tier": 1,
+    "case_type_note": "Covers receiving court papers when the person is NOT sure whether it is about owing rent or about the landlord wanting the apartment back. If they clearly owe rent, the nonpayment path fits better; if it is clearly about a lease ending or violation, the holdover path fits better. Use this entry when only 'court papers' is known without that context. A case has started and responding on time is critical.",
+    "high_leverage_question": {
+      "text": "What do the papers seem to be about?",
+      "options": [
+        "Owing rent or a money amount",
+        "The landlord wanting the apartment back, not about money",
+        "I cannot tell what they are about"
+      ],
+      "why": "Court papers about owing rent and court papers about getting the apartment back are different kinds of cases, but both require you to respond on time."
+    },
+    "deadline_flag": "Answer deadlines are short and vary. Never state a specific number of days. Tell the user to confirm their exact deadline immediately with the court or the Tenant Helpline.",
+    "steps_urgent": "A court case has started. The most urgent thing is to confirm your exact deadline today and answer the petition in person at the Landlord-Tenant Clerk's office, because missing the deadline can lead to losing the case by default.",
+    "steps_next_48h": [
+      "Confirm your exact deadline today by calling 311 and saying 'Tenant Helpline', or the court directly",
+      "Take a clear photo of every page of the papers and note the date you received them",
+      "Go to the Landlord-Tenant Clerk's office to answer the petition in person"
+    ],
+    "steps_this_week": [
+      "Gather anything that supports your side: rent records, your lease, photos of conditions, program paperwork",
+      "Ask about free legal representation, which may be available in every ZIP code regardless of immigration status",
+      "Note your court date, time, and room, and plan to arrive early"
+    ],
+    "mistakes_to_avoid": [
+      "Do not ignore the papers or a court postcard. Missing the answer deadline can lead to a default judgment.",
+      "Do not skip the court date. Not appearing can mean the judge decides without hearing your side.",
+      "Do not sign anything in court you do not understand. Ask the court attorney to explain it.",
+      "Do not leave your home before the court process requires it. This is hard to undo."
+    ],
+    "route_to_human": "Call 311 and say 'Tenant Helpline'. Housing Court Answers: 212-962-4795. Free Housing Court Help Center in every borough. Free legal representation may be available in every ZIP code regardless of immigration status under NYC's Right-to-Counsel law.",
+    "sources": [
+      "NY State Courts: New York City Tenants Questions and Answers About Housing Court, Access to Justice, November 2016",
+      "https://housingcourtanswers.org/answers/for-tenants/"
+    ]
+  },
+  "rent_increase_dispute": {
+    "label": "Your rent was raised and you are not sure it is allowed",
+    "last_verified": "2026-06",
+    "source_tier": 1,
+    "case_type_note": "Covers a rent increase you think may be too high or improper. Whether an increase is allowed depends on whether your apartment is rent stabilized, rent controlled, or market rate, which is something to confirm with the state housing agency.",
+    "high_leverage_question": {
+      "text": "What kind of apartment do you have?",
+      "options": [
+        "Rent stabilized or rent controlled",
+        "Market rate, with no special regulation",
+        "I am not sure what kind I have"
+      ],
+      "why": "The rules for rent increases are very different for regulated and market-rate apartments, so knowing which you have decides where to go next."
+    },
+    "deadline_flag": "If you want to challenge an increase or overcharge, there are time limits and a complaint process. Do not state specific legal timeframes. Route the user to DHCR to confirm.",
+    "steps_urgent": "Before paying or refusing, find out whether your apartment is rent regulated, because that decides what increase is allowed. The state housing agency, DHCR, can tell you and can take a complaint if the increase is improper.",
+    "steps_next_48h": [
+      "Keep the written increase notice and the date you received it",
+      "Gather your lease, any renewals, and your rent payment records",
+      "Contact DHCR at 718-739-6400 or hcr.ny.gov to ask whether your apartment is regulated and whether the increase is allowed"
+    ],
+    "steps_this_week": [
+      "If your apartment may be regulated, you can request your apartment's rent history from DHCR",
+      "If you believe you are being overcharged, you can file an overcharge complaint with DHCR's Office of Rent Administration",
+      "Call Metropolitan Council on Housing at 212-979-0611 for free tenant advocacy support"
+    ],
+    "mistakes_to_avoid": [
+      "Do not assume the increase is legal without checking whether your apartment is regulated.",
+      "Do not ignore a written increase notice; keep it and note the date.",
+      "Do not stop paying rent over a disputed increase without advice; that can be hard to undo."
+    ],
+    "route_to_human": "DHCR (state housing agency): 718-739-6400 or hcr.ny.gov. Metropolitan Council on Housing: 212-979-0611. Call 311 and say 'Tenant Helpline' for free guidance.",
+    "sources": [
+      "https://hcr.ny.gov/rent-increases-and-rent-overcharge",
+      "NYC Rent Guidelines Board: Rent Increases FAQ",
+      "NY State Attorney General Residential Tenants Rights Guide"
+    ]
+  },
+  "partial_payment": {
+    "label": "You can pay some, but not all, of the rent",
+    "last_verified": "2026-06",
+    "source_tier": 2,
+    "case_type_note": "Covers being able to pay part of the rent but not all of it. How partial payments and payment plans work depends on your situation, so this routes to assistance and to a person rather than giving fixed rules.",
+    "high_leverage_question": {
+      "text": "Where are you right now?",
+      "options": [
+        "I have not received any paper from my landlord yet",
+        "I have received a demand or court papers about the rent",
+        "I just want to set up a way to catch up"
+      ],
+      "why": "Whether a case has started changes your options, so it helps to know if you have received any paper yet."
+    },
+    "deadline_flag": "If court papers are involved, deadlines are short. Do not state specific legal timeframes. Route to free help to confirm.",
+    "steps_urgent": "Apply for rent assistance today, because help with arrears may cover part or all of what you owe, and a pending application can offer temporary protection. Then talk to your landlord in writing about catching up.",
+    "steps_next_48h": [
+      "Apply for HRA's One Shot Deal emergency assistance at 718-557-1399, and for ERAP through the OTDA portal",
+      "Call 311 and ask about Homebase to make a plan to catch up",
+      "Tell your landlord in writing what you can pay and when, and keep a copy"
+    ],
+    "steps_this_week": [
+      "Gather rent records and proof of any income change",
+      "Call Housing Court Answers at 212-962-4795 if you have a good reason for falling behind, to be referred to rent-arrears help",
+      "If you receive any paper about the rent, follow the steps for that specific situation"
+    ],
+    "mistakes_to_avoid": [
+      "Do not assume a partial payment fixes everything. Get any agreement about catching up in writing.",
+      "Do not agree to a payment plan you cannot keep. A missed plan can have real consequences.",
+      "Do not delay applying for help; a pending application can protect you."
+    ],
+    "route_to_human": "Call 311 and say 'Tenant Helpline' or ask about Homebase. HRA emergency assistance: 718-557-1399. Housing Court Answers arrears hotline: 212-962-4795.",
+    "sources": [
+      "https://www.nyc.gov/site/hpd/services-and-information/eviction-prevention.page",
+      "NYC HRA emergency assistance and Homebase program information"
+    ]
+  },
+  "lease_termination": {
+    "label": "Your lease is ending and you are unsure what happens",
+    "last_verified": "2026-06",
+    "source_tier": 1,
+    "case_type_note": "Covers confusion about a lease ending, renewal, or being told you must move when a lease ends. In New York, landlords must give advance written notice before not renewing or raising rent significantly, and rent-stabilized tenants usually have a right to renew.",
+    "high_leverage_question": {
+      "text": "What is your situation with the lease?",
+      "options": [
+        "My landlord has not offered a renewal and my lease is ending soon",
+        "I was told I must move when the lease ends",
+        "I want to leave and am not sure what I owe"
+      ],
+      "why": "Whether you want to stay or go, and whether the landlord has given proper written notice, decides your next step."
+    },
+    "deadline_flag": "Required notice depends on how long you have lived there. Do not state a specific number of days as a fixed rule; tell the user to confirm their exact notice rights with free help or the state agency.",
+    "steps_urgent": "A lease ending is not an automatic eviction, and you cannot be removed without a court process. In New York, landlords generally must give advance written notice before not renewing or raising rent significantly. Confirm your notice rights before making any move.",
+    "steps_next_48h": [
+      "Find your lease and note when it ends",
+      "Keep any written notice from the landlord and the date you received it",
+      "Call 311 and say 'Tenant Helpline' to confirm what notice you are owed and what your options are"
+    ],
+    "steps_this_week": [
+      "If your apartment may be rent stabilized, contact DHCR at 718-739-6400, since you may have a right to renew",
+      "If you plan to leave, ask what you may still owe and get any move-out agreement in writing",
+      "Keep copies of all notices and any agreement"
+    ],
+    "mistakes_to_avoid": [
+      "Do not move out just because a lease ended. You cannot be removed without a court process, and leaving early is hard to undo.",
+      "Do not ignore a written non-renewal or increase notice; keep it and confirm your rights.",
+      "Do not assume you have no right to renew; rent-stabilized tenants usually do."
+    ],
+    "route_to_human": "Call 311 and say 'Tenant Helpline'. DHCR (state housing agency): 718-739-6400 or hcr.ny.gov. Metropolitan Council on Housing: 212-979-0611.",
+    "sources": [
+      "NY State Attorney General Residential Tenants Rights Guide",
+      "https://hcr.ny.gov/leases",
+      "NYC Rent Guidelines Board: Leases FAQ"
+    ]
   }
+}

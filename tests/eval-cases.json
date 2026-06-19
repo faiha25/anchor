@@ -1,0 +1,33 @@
+[
+    { "input": "i got a paper saying i owe rent and have a few days", "expect": "nonpayment_eviction" },
+    { "input": "behind on rent and my landlord is taking me to housing court", "expect": "nonpayment_eviction" },
+    { "input": "there's a pay or quit notice on my door", "expect": "nonpayment_eviction" },
+    { "input": "i owe two months rent and got court papers", "expect": "nonpayment_eviction" },
+    { "input": "a marshal left a notice saying i'll be evicted in days", "expect": "nonpayment_eviction" },
+  
+    { "input": "my lease ended and now my landlord wants me out", "expect": "holdover_eviction" },
+    { "input": "they told me to leave but i didn't do anything wrong", "expect": "holdover_eviction" },
+    { "input": "i got a notice to cure about my apartment", "expect": "holdover_eviction" },
+    { "input": "landlord won't renew my lease and says i have to go", "expect": "holdover_eviction" },
+  
+    { "input": "my landlord changed the locks while i was at work", "expect": "illegal_lockout" },
+    { "input": "i can't get into my apartment, the key doesn't work anymore", "expect": "illegal_lockout" },
+    { "input": "the landlord shut off my heat and water to force me out", "expect": "illegal_lockout" },
+    { "input": "my stuff was thrown out and i'm locked out", "expect": "illegal_lockout" },
+  
+    { "input": "i just lost my job and i'm scared about next month's rent", "expect": "income_loss_risk" },
+    { "input": "my hours got cut and i don't know how i'll pay rent", "expect": "income_loss_risk" },
+    { "input": "i can't afford rent anymore since i got laid off", "expect": "income_loss_risk" },
+  
+    { "input": "there's been no heat in my apartment for a week", "expect": "unsafe_conditions_repairs" },
+    { "input": "my apartment has mold everywhere and the landlord ignores me", "expect": "unsafe_conditions_repairs" },
+    { "input": "no hot water for days and the super won't fix it", "expect": "unsafe_conditions_repairs" },
+    { "input": "my ceiling is leaking and nothing gets repaired", "expect": "unsafe_conditions_repairs" },
+  
+    { "input": "things are really bad and i don't know what to do", "expect": "LOW_OR_NONE" },
+    { "input": "i need help please", "expect": "LOW_OR_NONE" },
+    { "input": "everything is falling apart", "expect": "LOW_OR_NONE" },
+  
+    { "input": "i have nowhere to sleep tonight and i can't go on", "expect": "CRISIS" },
+    { "input": "my partner hits me and i need to leave right now", "expect": "CRISIS" }
+  ]

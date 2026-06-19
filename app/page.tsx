@@ -2,14 +2,51 @@
 
 import { useState } from 'react';
 
+function PhoneLink({ number, children }: { number: string; children: React.ReactNode }) {
+  return (
+    <a href={`tel:${number}`} className="underline decoration-from-font underline-offset-2">
+      {children}
+    </a>
+  );
+}
+
+function HumanRail() {
+  return (
+    <div className="mb-6 text-[0.8rem] text-ink-soft">
+      Need a person now?{' '}
+      <a href="tel:311" className="text-accent font-medium underline underline-offset-2">
+        Call 311
+      </a>{' '}
+      and say &ldquo;Tenant Helpline&rdquo;.
+    </div>
+  );
+}
+
+// Calm severity indicator driven by the urgency the AI already computes (1–5).
+function SeverityBadge({ urgency }: { urgency: number }) {
+  const levels: Record<number, { label: string; cls: string }> = {
+    1: { label: 'General — plan ahead', cls: 'bg-accent-tint text-accent' },
+    2: { label: 'Act soon', cls: 'bg-accent-tint text-accent' },
+    3: { label: 'Time-sensitive', cls: 'bg-urgent-tint text-urgent' },
+    4: { label: 'Urgent', cls: 'bg-urgent-tint text-urgent' },
+    5: { label: 'Emergency — act today', cls: 'bg-caution-tint text-caution' },
+  };
+  const lvl = levels[urgency] ?? levels[3];
+  return (
+    <span className={`inline-block rounded-full px-3 py-1 text-[0.75rem] font-semibold uppercase tracking-wide ${lvl.cls}`}>
+      {lvl.label}
+    </span>
+  );
+}
+
 export default function Home() {
   const [screen, setScreen] = useState('dump');
   const [situation, setSituation] = useState('');
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState<any>(null);
   const [error, setError] = useState('');
+  const [speaking, setSpeaking] = useState(false);
 
-  // First call: situation only. Returns the question.
   async function submitSituation() {
     if (!situation.trim()) return;
     setLoading(true);
@@ -33,7 +70,6 @@ export default function Home() {
     }
   }
 
-  // Second call: situation + their answer. Returns the refined plan.
   async function submitAnswer(answer: string) {
     setLoading(true);
     setError('');
@@ -61,26 +97,66 @@ export default function Home() {
   }
 
   function reset() {
+    stopSpeaking();
     setSituation('');
     setResult(null);
     setError('');
     setScreen('dump');
   }
 
+  // Read-aloud using the browser's built-in speech. No dependencies.
+  function readPlanAloud() {
+    if (typeof window === 'undefined' || !window.speechSynthesis) return;
+    if (speaking) { stopSpeaking(); return; }
+    const p = result?.plan;
+    if (!p) return;
+    const parts = [
+      'Most urgent.', p.urgent,
+      'Next 48 hours.', ...(p.next_48h ?? []),
+      'This week.', ...(p.this_week ?? []),
+      'Who to take this to.', p.human,
+    ].filter(Boolean);
+    const utt = new SpeechSynthesisUtterance(parts.join(' '));
+    utt.rate = 0.95;
+    utt.onend = () => setSpeaking(false);
+    window.speechSynthesis.cancel();
+    window.speechSynthesis.speak(utt);
+    setSpeaking(true);
+  }
+  function stopSpeaking() {
+    if (typeof window !== 'undefined' && window.speechSynthesis) window.speechSynthesis.cancel();
+    setSpeaking(false);
+  }
+
   const today = new Date().toLocaleDateString('en-US', {
     year: 'numeric', month: 'long', day: 'numeric',
   });
 
+  function formatVerified(v: string | null | undefined): string | null {
+    if (!v) return null;
+    const [year, month] = v.split('-');
+    const months = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+    const mi = parseInt(month, 10) - 1;
+    if (mi < 0 || mi > 11) return null;
+    return `${months[mi]} ${year}`;
+  }
+  const verifiedLabel = formatVerified(result?.verified);
+  const secondaryLabels: string[] = Array.isArray(result?.secondaryLabels) ? result.secondaryLabels : [];
+  const urgency: number = typeof result?.urgency === 'number' ? result.urgency : 0;
+  const sourcePrimary: string | null = result?.source?.primary ?? null;
+
   return (
     <>
       <main className="app-view min-h-screen w-full flex justify-center bg-canvas">
-        <div className="w-full max-w-[30rem] px-6 pt-20 pb-12 flex flex-col min-h-screen">
+        <div className="w-full max-w-[30rem] px-6 pt-12 pb-12 flex flex-col min-h-screen">
+
+          <HumanRail />
 
           {/* SCREEN: DUMP */}
           {screen === 'dump' && (
             <div className="anchor-enter flex flex-col flex-1">
               <p className="text-[0.95rem] font-medium tracking-tight text-ink">Anchor</p>
-              <div className="mt-16">
+              <div className="mt-12">
                 <h1 className="text-[1.4rem] leading-snug font-normal text-ink">
                   What&apos;s happening with your housing right now?
                 </h1>
@@ -103,7 +179,11 @@ export default function Home() {
                 >
                   {loading ? 'Reading what you wrote…' : 'See what\u2019s most urgent'}
                 </button>
-                <p className="mt-5 text-[0.8rem] leading-relaxed text-center text-ink-soft">
+                <p className="mt-4 text-[0.78rem] leading-relaxed text-center text-ink-soft">
+                  Anchor covers common NYC renter situations. It doesn&apos;t yet cover NYCHA / public housing
+                  rules or non-NYC areas — for those, it points you to the right human.
+                </p>
+                <p className="mt-3 text-[0.8rem] leading-relaxed text-center text-ink-soft">
                   General information for New York City, not legal advice.
                   Always confirm with a person before acting.
                 </p>
@@ -111,18 +191,28 @@ export default function Home() {
             </div>
           )}
 
-          {/* SCREEN: QUESTION (seen first, then asked) */}
+          {/* SCREEN: QUESTION */}
           {screen === 'question' && result && (
             <div className="anchor-enter flex flex-col flex-1">
               <div>
                 <p className="text-[0.75rem] font-semibold uppercase tracking-wider text-ink-soft mb-2">
                   What I understand so far
                 </p>
-                <ul className="space-y-1.5 text-ink text-[0.98rem] leading-relaxed mb-8">
+                <ul className="space-y-1.5 text-ink text-[0.98rem] leading-relaxed mb-6">
                   {result.reasoning?.what_i_understand?.map((item: string, i: number) => (
                     <li key={i}>{item}</li>
                   ))}
                 </ul>
+
+                {secondaryLabels.length > 0 && (
+                  <div className="rounded-xl bg-accent-tint p-4 mb-6">
+                    <p className="text-[0.9rem] leading-relaxed text-ink">
+                      You also mentioned{' '}
+                      <span className="font-medium">{secondaryLabels.join(', ')}</span>.
+                      Let&apos;s handle the most urgent thing first — you can come back for the rest after.
+                    </p>
+                  </div>
+                )}
 
                 <p className="text-[0.9rem] leading-relaxed text-ink-soft mb-6">
                   {result.reasoning?.why_this_question}
@@ -165,6 +255,17 @@ export default function Home() {
           {/* SCREEN: PLAN */}
           {screen === 'plan' && result && (
             <div className="anchor-enter">
+              {/* Severity + read-aloud row */}
+              <div className="flex items-center justify-between mb-6">
+                {urgency > 0 ? <SeverityBadge urgency={urgency} /> : <span />}
+                <button
+                  onClick={readPlanAloud}
+                  className="text-[0.85rem] text-accent font-medium underline underline-offset-2"
+                >
+                  {speaking ? 'Stop reading' : 'Read this aloud'}
+                </button>
+              </div>
+
               <div className="text-[0.95rem] leading-relaxed">
                 <p className="text-[0.75rem] font-semibold uppercase tracking-wider text-ink-soft mb-2">
                   What I understand so far
@@ -222,12 +323,34 @@ export default function Home() {
                 </ul>
               </div>
 
-              <div className="rounded-2xl bg-accent-tint p-5 mb-8">
+              <div className="rounded-2xl bg-accent-tint p-5 mb-6">
                 <p className="text-[0.75rem] font-semibold uppercase tracking-wider text-accent mb-2">
                   Who to take this to
                 </p>
                 <p className="text-[0.95rem] leading-relaxed text-ink">{result.plan?.human}</p>
+                <p className="mt-3 text-[0.9rem] text-ink">
+                  Quick dial:{' '}
+                  <PhoneLink number="311"><span className="text-accent font-medium">311</span></PhoneLink>
+                  {' · '}
+                  <PhoneLink number="2129624795"><span className="text-accent font-medium">212-962-4795</span></PhoneLink>
+                </p>
               </div>
+
+              {secondaryLabels.length > 0 && (
+                <div className="rounded-xl border border-hairline p-4 mb-6">
+                  <p className="text-[0.9rem] leading-relaxed text-ink-soft">
+                    When you&apos;re ready, you can come back and start over for:{' '}
+                    <span className="font-medium text-ink">{secondaryLabels.join(', ')}</span>.
+                  </p>
+                </div>
+              )}
+
+              {(verifiedLabel || sourcePrimary) && (
+                <p className="text-[0.8rem] text-ink-soft mb-8">
+                  {verifiedLabel ? `NYC tenant information, verified ${verifiedLabel}.` : ''}
+                  {sourcePrimary ? ` Based on: ${sourcePrimary}.` : ''}
+                </p>
+              )}
 
               <button
                 onClick={() => window.print()}
@@ -260,6 +383,14 @@ export default function Home() {
                     <li key={i} className="text-[1rem] font-medium text-accent-ink">{item}</li>
                   ))}
                 </ul>
+                <p className="mt-5 text-[0.95rem] text-ink">
+                  Tap to call:{' '}
+                  <PhoneLink number="988"><span className="text-accent font-medium">988</span></PhoneLink>
+                  {' · '}
+                  <PhoneLink number="18007997233"><span className="text-accent font-medium">1-800-799-7233</span></PhoneLink>
+                  {' · '}
+                  <PhoneLink number="911"><span className="text-accent font-medium">911</span></PhoneLink>
+                </p>
               </div>
               <button
                 onClick={reset}
@@ -274,7 +405,13 @@ export default function Home() {
           {screen === 'fallback' && result && (
             <div className="anchor-enter flex flex-col flex-1 justify-center">
               <div className="rounded-2xl bg-surface border border-hairline p-6 mb-8">
-                <p className="text-[1.05rem] leading-relaxed text-ink">{result.message}</p>
+                <p className="text-[1.05rem] leading-relaxed text-ink mb-4">{result.message}</p>
+                <p className="text-[0.95rem] text-ink">
+                  Tap to call:{' '}
+                  <PhoneLink number="311"><span className="text-accent font-medium">311</span></PhoneLink>
+                  {' · '}
+                  <PhoneLink number="2129624795"><span className="text-accent font-medium">212-962-4795</span></PhoneLink>
+                </p>
               </div>
               <button
                 onClick={reset}
@@ -292,13 +429,24 @@ export default function Home() {
       {screen === 'plan' && result && (
         <div className="case-file text-slate-900 max-w-2xl mx-auto">
           <h1 className="text-2xl font-bold mb-1">Housing Situation Summary</h1>
-          <p className="text-sm text-slate-500 mb-6">Prepared with Anchor on {today}. General information for NYC, not legal advice.</p>
+          <p className="text-sm text-slate-500 mb-6">
+            Prepared with Anchor on {today}.
+            {verifiedLabel ? ` NYC tenant information verified ${verifiedLabel}.` : ''}
+            {sourcePrimary ? ` Based on: ${sourcePrimary}.` : ''}
+            {' '}General information for NYC, not legal advice.
+          </p>
           <h2 className="text-base font-semibold border-b border-slate-300 pb-1 mb-2">In their own words</h2>
           <p className="text-sm mb-5 italic">&ldquo;{situation}&rdquo;</p>
           <h2 className="text-base font-semibold border-b border-slate-300 pb-1 mb-2">What this appears to be</h2>
           <ul className="list-disc list-inside text-sm mb-5">
             {result.reasoning?.what_i_understand?.map((item: string, i: number) => (<li key={i}>{item}</li>))}
           </ul>
+          {secondaryLabels.length > 0 && (
+            <>
+              <h2 className="text-base font-semibold border-b border-slate-300 pb-1 mb-2">Other issues also mentioned</h2>
+              <p className="text-sm mb-5">{secondaryLabels.join(', ')}</p>
+            </>
+          )}
           <h2 className="text-base font-semibold border-b border-slate-300 pb-1 mb-2">Most urgent action</h2>
           <p className="text-sm mb-5">{result.plan?.urgent}</p>
           <h2 className="text-base font-semibold border-b border-slate-300 pb-1 mb-2">Next 48 hours</h2>
