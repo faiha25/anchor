@@ -1,6 +1,7 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
+import Resources from './Resources';
 
 function PhoneLink({ number, children }: { number: string; children: React.ReactNode }) {
   return (
@@ -22,7 +23,6 @@ function HumanRail() {
   );
 }
 
-// Calm severity indicator driven by the urgency the AI already computes (1–5).
 function SeverityBadge({ urgency }: { urgency: number }) {
   const levels: Record<number, { label: string; cls: string }> = {
     1: { label: 'General — plan ahead', cls: 'bg-accent-tint text-accent' },
@@ -39,6 +39,53 @@ function SeverityBadge({ urgency }: { urgency: number }) {
   );
 }
 
+// Simple microphone icon (SVG, matches the calm line-icon style).
+function MicIcon({ active }: { active: boolean }) {
+  return (
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none"
+      stroke={active ? 'var(--color-caution)' : 'currentColor'} strokeWidth="1.8"
+      strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z" />
+      <path d="M19 10v2a7 7 0 0 1-14 0v-2" />
+      <line x1="12" y1="19" x2="12" y2="23" />
+      <line x1="8" y1="23" x2="16" y2="23" />
+    </svg>
+  );
+}
+
+// The human-support escalation block. Prominence scales with urgency.
+function HumanHandoff({ emphasized }: { emphasized?: boolean }) {
+  return (
+    <div className={`rounded-2xl p-5 mb-6 ${emphasized ? 'bg-accent-tint border border-accent' : 'border border-hairline'}`}>
+      <p className="text-[0.75rem] font-semibold uppercase tracking-wider text-accent mb-2">
+        Want a person to walk you through this?
+      </p>
+      <p className="text-[0.9rem] leading-relaxed text-ink mb-3">
+        These free NYC services have trained people who can talk through your situation with you,
+        not just point you to a form.
+      </p>
+      <ul className="space-y-2 text-[0.9rem] text-ink">
+        <li>
+          Housing Court Help Center (free, every borough){' '}
+          <PhoneLink number="2129624795"><span className="text-accent font-medium">212-962-4795</span></PhoneLink>
+        </li>
+        <li>
+          Met Council on Housing (tenant counseling){' '}
+          <PhoneLink number="2129790611"><span className="text-accent font-medium">212-979-0611</span></PhoneLink>
+        </li>
+        <li>
+          NYC Tenant Helpline{' '}
+          <PhoneLink number="311"><span className="text-accent font-medium">311</span></PhoneLink>
+          {' '}— say &ldquo;Tenant Helpline&rdquo;
+        </li>
+      </ul>
+      <p className="mt-3 text-[0.78rem] text-ink-soft">
+        Direct counselor connection is coming to Anchor. For now, these trusted services are the fastest way to reach a person.
+      </p>
+    </div>
+  );
+}
+
 export default function Home() {
   const [screen, setScreen] = useState('dump');
   const [situation, setSituation] = useState('');
@@ -47,8 +94,57 @@ export default function Home() {
   const [error, setError] = useState('');
   const [speaking, setSpeaking] = useState(false);
 
+  // Voice input state
+  const [listening, setListening] = useState(false);
+  const [voiceSupported, setVoiceSupported] = useState(false);
+  const recognitionRef = useRef<any>(null);
+
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    const SR = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
+    if (SR) setVoiceSupported(true);
+  }, []);
+
+  function toggleListening() {
+    if (typeof window === 'undefined') return;
+    const SR = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
+    if (!SR) return;
+
+    if (listening) {
+      recognitionRef.current?.stop();
+      setListening(false);
+      return;
+    }
+
+    const recognition = new SR();
+    recognition.lang = 'en-US';
+    recognition.continuous = false;
+    recognition.interimResults = false;
+
+    recognition.onresult = (event: any) => {
+      const transcript = Array.from(event.results)
+        .map((r: any) => r[0]?.transcript ?? '')
+        .join(' ')
+        .trim();
+      if (transcript) {
+        setSituation((prev) => (prev ? prev + ' ' + transcript : transcript));
+      }
+    };
+    recognition.onerror = () => { setListening(false); };
+    recognition.onend = () => { setListening(false); };
+
+    recognitionRef.current = recognition;
+    try {
+      recognition.start();
+      setListening(true);
+    } catch {
+      setListening(false);
+    }
+  }
+
   async function submitSituation() {
     if (!situation.trim()) return;
+    if (listening) { recognitionRef.current?.stop(); setListening(false); }
     setLoading(true);
     setError('');
     try {
@@ -98,13 +194,13 @@ export default function Home() {
 
   function reset() {
     stopSpeaking();
+    if (listening) { recognitionRef.current?.stop(); setListening(false); }
     setSituation('');
     setResult(null);
     setError('');
     setScreen('dump');
   }
 
-  // Read-aloud using the browser's built-in speech. No dependencies.
   function readPlanAloud() {
     if (typeof window === 'undefined' || !window.speechSynthesis) return;
     if (speaking) { stopSpeaking(); return; }
@@ -163,12 +259,27 @@ export default function Home() {
                 <p className="mt-3 text-[0.95rem] leading-relaxed text-ink-soft">
                   Say it however it comes out. There&apos;s no wrong way to start.
                 </p>
-                <textarea
-                  value={situation}
-                  onChange={(e) => setSituation(e.target.value)}
-                  placeholder="e.g. I got a paper on my door saying I have a few days, I have two kids…"
-                  className="mt-6 w-full h-44 p-4 rounded-xl bg-surface border border-hairline text-[1.05rem] leading-relaxed resize-none transition-colors focus:border-accent focus:outline-none placeholder:text-ink-soft"
-                />
+
+                <div className="relative mt-6">
+                  <textarea
+                    value={situation}
+                    onChange={(e) => setSituation(e.target.value)}
+                    placeholder="e.g. I got a paper on my door saying I have a few days, I have two kids..."
+                    className="w-full h-44 p-4 pr-12 rounded-xl bg-surface border border-hairline text-[1.05rem] leading-relaxed resize-none transition-colors focus:border-accent focus:outline-none placeholder:text-ink-soft"
+                  />
+                  {voiceSupported && (
+                    <button
+                      onClick={toggleListening}
+                      aria-label={listening ? 'Stop voice input' : 'Start voice input'}
+                      className={`absolute top-3 right-3 p-2 rounded-lg transition-colors ${listening ? 'bg-caution-tint text-caution' : 'text-ink-soft hover:bg-accent-tint hover:text-accent'}`}
+                    >
+                      <MicIcon active={listening} />
+                    </button>
+                  )}
+                </div>
+                {listening && (
+                  <p className="mt-2 text-[0.82rem] text-caution">Listening... tap the mic again when you finish.</p>
+                )}
                 {error && <p className="mt-3 text-[0.9rem] text-caution">{error}</p>}
               </div>
               <div className="mt-auto pt-10">
@@ -177,11 +288,11 @@ export default function Home() {
                   disabled={loading}
                   className="w-full bg-accent text-white py-4 rounded-xl text-[1.05rem] font-medium transition-colors hover:bg-accent-ink disabled:opacity-60"
                 >
-                  {loading ? 'Reading what you wrote…' : 'See what\u2019s most urgent'}
+                  {loading ? 'Reading what you wrote...' : 'See what is most urgent'}
                 </button>
                 <p className="mt-4 text-[0.78rem] leading-relaxed text-center text-ink-soft">
                   Anchor covers common NYC renter situations. It doesn&apos;t yet cover NYCHA / public housing
-                  rules or non-NYC areas — for those, it points you to the right human.
+                  rules or non-NYC areas. For those, it points you to the right human.
                 </p>
                 <p className="mt-3 text-[0.8rem] leading-relaxed text-center text-ink-soft">
                   General information for New York City, not legal advice.
@@ -209,7 +320,7 @@ export default function Home() {
                     <p className="text-[0.9rem] leading-relaxed text-ink">
                       You also mentioned{' '}
                       <span className="font-medium">{secondaryLabels.join(', ')}</span>.
-                      Let&apos;s handle the most urgent thing first — you can come back for the rest after.
+                      Let&apos;s handle the most urgent thing first. You can come back for the rest after.
                     </p>
                   </div>
                 )}
@@ -236,7 +347,7 @@ export default function Home() {
                 </div>
 
                 {loading && (
-                  <p className="mt-6 text-[0.9rem] text-ink-soft">Putting your plan together…</p>
+                  <p className="mt-6 text-[0.9rem] text-ink-soft">Putting your plan together...</p>
                 )}
                 {error && <p className="mt-4 text-[0.9rem] text-caution">{error}</p>}
               </div>
@@ -255,7 +366,6 @@ export default function Home() {
           {/* SCREEN: PLAN */}
           {screen === 'plan' && result && (
             <div className="anchor-enter">
-              {/* Severity + read-aloud row */}
               <div className="flex items-center justify-between mb-6">
                 {urgency > 0 ? <SeverityBadge urgency={urgency} /> : <span />}
                 <button
@@ -293,7 +403,7 @@ export default function Home() {
                 <ul className="space-y-2.5">
                   {result.plan?.next_48h?.map((item: string, i: number) => (
                     <li key={i} className="text-[0.98rem] leading-relaxed pl-4 relative text-ink">
-                      <span className="absolute left-0 text-ink-soft">·</span>{item}
+                      <span className="absolute left-0 text-ink-soft">-</span>{item}
                     </li>
                   ))}
                 </ul>
@@ -306,7 +416,7 @@ export default function Home() {
                 <ul className="space-y-2.5">
                   {result.plan?.this_week?.map((item: string, i: number) => (
                     <li key={i} className="text-[0.98rem] leading-relaxed pl-4 relative text-ink">
-                      <span className="absolute left-0 text-ink-soft">·</span>{item}
+                      <span className="absolute left-0 text-ink-soft">-</span>{item}
                     </li>
                   ))}
                 </ul>
@@ -331,10 +441,14 @@ export default function Home() {
                 <p className="mt-3 text-[0.9rem] text-ink">
                   Quick dial:{' '}
                   <PhoneLink number="311"><span className="text-accent font-medium">311</span></PhoneLink>
-                  {' · '}
+                  {' - '}
                   <PhoneLink number="2129624795"><span className="text-accent font-medium">212-962-4795</span></PhoneLink>
                 </p>
               </div>
+
+              <Resources situationKey={result.situation_key} />
+
+              <HumanHandoff emphasized={urgency >= 4} />
 
               {secondaryLabels.length > 0 && (
                 <div className="rounded-xl border border-hairline p-4 mb-6">
@@ -376,7 +490,7 @@ export default function Home() {
           {/* SCREEN: CRISIS */}
           {screen === 'crisis' && result && (
             <div className="anchor-enter flex flex-col flex-1 justify-center">
-              <div className="rounded-2xl bg-accent-tint p-6 mb-8">
+              <div className="rounded-2xl bg-accent-tint p-6 mb-6">
                 <p className="text-[1.1rem] leading-relaxed font-medium text-ink mb-5">{result.message}</p>
                 <ul className="space-y-3">
                   {result.resources?.map((item: string, i: number) => (
@@ -386,12 +500,13 @@ export default function Home() {
                 <p className="mt-5 text-[0.95rem] text-ink">
                   Tap to call:{' '}
                   <PhoneLink number="988"><span className="text-accent font-medium">988</span></PhoneLink>
-                  {' · '}
+                  {' - '}
                   <PhoneLink number="18007997233"><span className="text-accent font-medium">1-800-799-7233</span></PhoneLink>
-                  {' · '}
+                  {' - '}
                   <PhoneLink number="911"><span className="text-accent font-medium">911</span></PhoneLink>
                 </p>
               </div>
+              <Resources situationKey="_crisis" />
               <button
                 onClick={reset}
                 className="w-full py-3.5 rounded-xl border border-hairline text-ink-soft text-[0.98rem] transition-colors hover:bg-surface"
@@ -409,7 +524,7 @@ export default function Home() {
                 <p className="text-[0.95rem] text-ink">
                   Tap to call:{' '}
                   <PhoneLink number="311"><span className="text-accent font-medium">311</span></PhoneLink>
-                  {' · '}
+                  {' - '}
                   <PhoneLink number="2129624795"><span className="text-accent font-medium">212-962-4795</span></PhoneLink>
                 </p>
               </div>
