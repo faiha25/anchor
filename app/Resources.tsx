@@ -23,12 +23,13 @@ type Resource = {
 
 const all = data.resources as Resource[];
 
+// Ordered category priority per situation. Earlier = more relevant = shown first.
 const SITUATION_CATEGORIES: Record<string, string[]> = {
-  nonpayment_eviction: ['housing_court', 'tenant_support', 'rental_assistance'],
-  holdover_eviction: ['housing_court', 'tenant_support'],
-  court_notice_received: ['housing_court', 'tenant_support'],
+  nonpayment_eviction: ['rental_assistance', 'tenant_support', 'housing_court'],
+  holdover_eviction: ['tenant_support', 'housing_court'],
+  court_notice_received: ['tenant_support', 'housing_court'],
   illegal_lockout: ['emergency_shelter', 'tenant_support', 'housing_court'],
-  unsafe_conditions_repairs: ['housing_court', 'tenant_support'],
+  unsafe_conditions_repairs: ['tenant_support', 'housing_court'],
   income_loss_risk: ['rental_assistance', 'tenant_support'],
   partial_payment: ['rental_assistance', 'tenant_support'],
   landlord_harassment: ['tenant_support', 'emergency_dv', 'housing_court'],
@@ -36,17 +37,27 @@ const SITUATION_CATEGORIES: Record<string, string[]> = {
   rent_increase_dispute: ['rental_assistance', 'tenant_support'],
   lease_termination: ['rental_assistance', 'tenant_support'],
   _crisis: ['emergency_dv', 'emergency_shelter', 'tenant_support'],
-  _default: ['housing_court', 'tenant_support'],
+  _default: ['tenant_support', 'housing_court'],
 };
+
+const TOP_N = 3;
 
 export default function Resources({ situationKey }: { situationKey?: string }) {
   const [showMap, setShowMap] = useState(false);
+  const [showAll, setShowAll] = useState(false);
 
   const cats = SITUATION_CATEGORIES[situationKey ?? '_default'] ?? SITUATION_CATEGORIES._default;
-  const list = all.filter((r) => cats.includes(r.category));
-  const pinned = list.filter((r) => r.lat !== null && r.lng !== null);
 
-  if (list.length === 0) return null;
+  // Sort matching resources by category priority order.
+  const matched = all
+    .filter((r) => cats.includes(r.category))
+    .sort((a, b) => cats.indexOf(a.category) - cats.indexOf(b.category));
+
+  if (matched.length === 0) return null;
+
+  const visible = showAll ? matched : matched.slice(0, TOP_N);
+  const hiddenCount = matched.length - TOP_N;
+  const pinned = matched.filter((r) => r.lat !== null && r.lng !== null);
 
   return (
     <div className="rounded-2xl border border-hairline p-5 mb-6">
@@ -74,7 +85,7 @@ export default function Resources({ situationKey }: { situationKey?: string }) {
       )}
 
       <ul className="space-y-3">
-        {list.map((r) => (
+        {visible.map((r) => (
           <li key={r.id} className="rounded-xl bg-surface border border-hairline p-4">
             <div className="flex items-start justify-between gap-3">
               <div>
@@ -82,6 +93,7 @@ export default function Resources({ situationKey }: { situationKey?: string }) {
                 <p className="text-[0.85rem] text-ink-soft mt-0.5">{r.borough}</p>
               </div>
               <a
+              
                 href={`tel:${r.phone.replace(/[^0-9]/g, '')}`}
                 className="shrink-0 text-[0.85rem] text-accent font-medium underline underline-offset-2"
               >
@@ -95,6 +107,20 @@ export default function Resources({ situationKey }: { situationKey?: string }) {
           </li>
         ))}
       </ul>
+
+      {hiddenCount > 0 && (
+        <button
+          onClick={() => setShowAll((s) => !s)}
+          className="mt-4 text-[0.85rem] text-accent font-medium underline underline-offset-2"
+        >
+          {showAll ? 'Show fewer' : `Show all resources (${hiddenCount} more)`}
+        </button>
+      )}
+
+      <p className="mt-4 text-[0.78rem] text-ink-soft">
+        These services have trained people who can talk through your situation, not just point you to a form.
+        Direct counselor connection is coming to Anchor.
+      </p>
     </div>
   );
 }

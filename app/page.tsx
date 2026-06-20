@@ -11,6 +11,26 @@ function PhoneLink({ number, children }: { number: string; children: React.React
   );
 }
 
+// Finds phone numbers (formatted or the bare "311") inside text and makes them tap-to-dial.
+function linkifyPhones(text: string): React.ReactNode {
+  if (!text) return text;
+  // Matches 1-800-799-7233, 718-557-1399, 212-962-4795, and standalone 311.
+  const pattern = /(\b1?[-\s]?\d{3}[-\s]?\d{3}[-\s]?\d{4}\b|\b311\b)/g;
+  const parts = text.split(pattern);
+  return parts.map((part, i) => {
+    if (pattern.test(part)) {
+      pattern.lastIndex = 0; // reset because we reuse the regex
+      const tel = part.replace(/[^0-9]/g, '');
+      return (
+        <a key={i} href={`tel:${tel}`} className="text-accent font-medium underline underline-offset-2">
+          {part}
+        </a>
+      );
+    }
+    return part;
+  });
+}
+
 function HumanRail() {
   return (
     <div className="mb-6 text-[0.8rem] text-ink-soft">
@@ -39,7 +59,6 @@ function SeverityBadge({ urgency }: { urgency: number }) {
   );
 }
 
-// Simple microphone icon (SVG, matches the calm line-icon style).
 function MicIcon({ active }: { active: boolean }) {
   return (
     <svg width="20" height="20" viewBox="0 0 24 24" fill="none"
@@ -53,39 +72,6 @@ function MicIcon({ active }: { active: boolean }) {
   );
 }
 
-// The human-support escalation block. Prominence scales with urgency.
-function HumanHandoff({ emphasized }: { emphasized?: boolean }) {
-  return (
-    <div className={`rounded-2xl p-5 mb-6 ${emphasized ? 'bg-accent-tint border border-accent' : 'border border-hairline'}`}>
-      <p className="text-[0.75rem] font-semibold uppercase tracking-wider text-accent mb-2">
-        Want a person to walk you through this?
-      </p>
-      <p className="text-[0.9rem] leading-relaxed text-ink mb-3">
-        These free NYC services have trained people who can talk through your situation with you,
-        not just point you to a form.
-      </p>
-      <ul className="space-y-2 text-[0.9rem] text-ink">
-        <li>
-          Housing Court Help Center (free, every borough){' '}
-          <PhoneLink number="2129624795"><span className="text-accent font-medium">212-962-4795</span></PhoneLink>
-        </li>
-        <li>
-          Met Council on Housing (tenant counseling){' '}
-          <PhoneLink number="2129790611"><span className="text-accent font-medium">212-979-0611</span></PhoneLink>
-        </li>
-        <li>
-          NYC Tenant Helpline{' '}
-          <PhoneLink number="311"><span className="text-accent font-medium">311</span></PhoneLink>
-          {' '}— say &ldquo;Tenant Helpline&rdquo;
-        </li>
-      </ul>
-      <p className="mt-3 text-[0.78rem] text-ink-soft">
-        Direct counselor connection is coming to Anchor. For now, these trusted services are the fastest way to reach a person.
-      </p>
-    </div>
-  );
-}
-
 export default function Home() {
   const [screen, setScreen] = useState('dump');
   const [situation, setSituation] = useState('');
@@ -94,7 +80,6 @@ export default function Home() {
   const [error, setError] = useState('');
   const [speaking, setSpeaking] = useState(false);
 
-  // Voice input state
   const [listening, setListening] = useState(false);
   const [voiceSupported, setVoiceSupported] = useState(false);
   const recognitionRef = useRef<any>(null);
@@ -392,7 +377,7 @@ export default function Home() {
                   Most urgent
                 </p>
                 <p className="text-[1.35rem] leading-snug font-semibold text-ink">
-                  {result.plan?.urgent}
+                  {linkifyPhones(result.plan?.urgent)}
                 </p>
               </div>
 
@@ -403,7 +388,7 @@ export default function Home() {
                 <ul className="space-y-2.5">
                   {result.plan?.next_48h?.map((item: string, i: number) => (
                     <li key={i} className="text-[0.98rem] leading-relaxed pl-4 relative text-ink">
-                      <span className="absolute left-0 text-ink-soft">-</span>{item}
+                      <span className="absolute left-0 text-ink-soft">-</span>{linkifyPhones(item)}
                     </li>
                   ))}
                 </ul>
@@ -416,7 +401,7 @@ export default function Home() {
                 <ul className="space-y-2.5">
                   {result.plan?.this_week?.map((item: string, i: number) => (
                     <li key={i} className="text-[0.98rem] leading-relaxed pl-4 relative text-ink">
-                      <span className="absolute left-0 text-ink-soft">-</span>{item}
+                      <span className="absolute left-0 text-ink-soft">-</span>{linkifyPhones(item)}
                     </li>
                   ))}
                 </ul>
@@ -428,7 +413,7 @@ export default function Home() {
                 </p>
                 <ul className="space-y-3">
                   {result.plan?.mistakes?.map((item: string, i: number) => (
-                    <li key={i} className="text-[0.95rem] leading-relaxed text-ink">{item}</li>
+                    <li key={i} className="text-[0.95rem] leading-relaxed text-ink">{linkifyPhones(item)}</li>
                   ))}
                 </ul>
               </div>
@@ -437,18 +422,10 @@ export default function Home() {
                 <p className="text-[0.75rem] font-semibold uppercase tracking-wider text-accent mb-2">
                   Who to take this to
                 </p>
-                <p className="text-[0.95rem] leading-relaxed text-ink">{result.plan?.human}</p>
-                <p className="mt-3 text-[0.9rem] text-ink">
-                  Quick dial:{' '}
-                  <PhoneLink number="311"><span className="text-accent font-medium">311</span></PhoneLink>
-                  {' - '}
-                  <PhoneLink number="2129624795"><span className="text-accent font-medium">212-962-4795</span></PhoneLink>
-                </p>
+                <p className="text-[0.95rem] leading-relaxed text-ink">{linkifyPhones(result.plan?.human)}</p>
               </div>
 
               <Resources situationKey={result.situation_key} />
-
-              <HumanHandoff emphasized={urgency >= 4} />
 
               {secondaryLabels.length > 0 && (
                 <div className="rounded-xl border border-hairline p-4 mb-6">
@@ -494,7 +471,7 @@ export default function Home() {
                 <p className="text-[1.1rem] leading-relaxed font-medium text-ink mb-5">{result.message}</p>
                 <ul className="space-y-3">
                   {result.resources?.map((item: string, i: number) => (
-                    <li key={i} className="text-[1rem] font-medium text-accent-ink">{item}</li>
+                    <li key={i} className="text-[1rem] font-medium text-accent-ink">{linkifyPhones(item)}</li>
                   ))}
                 </ul>
                 <p className="mt-5 text-[0.95rem] text-ink">
@@ -520,7 +497,7 @@ export default function Home() {
           {screen === 'fallback' && result && (
             <div className="anchor-enter flex flex-col flex-1 justify-center">
               <div className="rounded-2xl bg-surface border border-hairline p-6 mb-8">
-                <p className="text-[1.05rem] leading-relaxed text-ink mb-4">{result.message}</p>
+                <p className="text-[1.05rem] leading-relaxed text-ink mb-4">{linkifyPhones(result.message)}</p>
                 <p className="text-[0.95rem] text-ink">
                   Tap to call:{' '}
                   <PhoneLink number="311"><span className="text-accent font-medium">311</span></PhoneLink>
