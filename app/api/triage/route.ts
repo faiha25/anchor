@@ -180,7 +180,7 @@ function wait(ms: number): Promise<void> {
 }
 
 async function callModelWithRetry(prompt: string): Promise<string> {
-  const models = ["gemini-2.5-flash", "gemini-2.0-flash", "gemini-2.0-flash-lite"];
+  const models = ["gemini-2.5-flash", "gemini-2.5-flash-lite"];
   let lastError: unknown = null;
 
   for (const model of models) {
