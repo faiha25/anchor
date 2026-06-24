@@ -32,7 +32,7 @@ Anchor reasons in two passes over a verified playbook:
 
 ## Evaluation
 
-Validated across 25 labeled test cases spanning all 11 scenarios plus adversarial crisis inputs: 95% correct primary classification. 
+Validated across 25 labeled test cases spanning all 11 scenarios plus adversarial crisis inputs: 92% correct primary classification. 
 
 Bias testing: Anchor was tested across terse low-literacy input, African American Vernacular English, and mixed Spanish-English, and correctly interpreted non-standard grammar, routing each to the right situation. Ambiguous input routes to a human via the confidence gate.
 
