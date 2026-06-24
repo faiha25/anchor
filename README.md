@@ -1,16 +1,16 @@
 # Anchor — NYC Housing Stability Guide
 
-> Anchor turns a renter's story into one clear, urgent next step and a printable handoff to a human. For NYC tenants facing eviction. Guidance and triage, **not legal advice**.
+> Anchor turns a renter's story into one clear next step and a printable handoff to a human. Built for NYC tenants facing housing instability.
 
-> **How it works in one line:** the knowledge base is `playbook.json` — every fact Anchor states lives there, dated and cited. The model never invents facts; it classifies and routes within verified content.
+> **How it works in one line:**  Every fact Anchor states lives in `playbook.json` — every fact Anchor states lives there. The model doesn't invent facts; it classifies situations and routes users through verified content.
 
 ---
 
 ## What it does
 
-Anchor is a triage tool. A renter types or speaks what's happening in plain words. Anchor reads it, asks one high-leverage question, and returns a single most-urgent action, a short plan, mistakes to avoid, and the verified humans to call — plus a printable one-page summary to hand to a counselor.
+Anchor is a triage tool, not a chatbot or a lawyer. A renter types or speaks what's happening. Anchor reads the situation, asks one high-leverage question, and returns a single most urgent action, a short plan, mistakes to avoid, and the verified people to call — plus a printable one-page summary that can be handed directly to a counselor.
 
-The proof of its reasoning: a rent demand with no court date returns *"you likely have some time, start applying for rent help today."* A City Marshal's eviction notice for the same person returns *"time is very short, go to court today to ask for an Order to Show Cause."* Same situation type, opposite urgency, because the answer to one question changed everything.
+The clearest example of its reasoning is the difference between a rent demand and a City Marshal's notice. A rent demand with no court date leads to: *"you likely have some time, start applying for rent help today."* A City Marshal's eviction notice for the same person returns *"time is very short, go to court today to ask for an Order to Show Cause."* Same problem category, different legal stage, completely different urgency.
 
 ## Live demo
 
@@ -32,7 +32,7 @@ Anchor reasons in two passes over a verified playbook:
 
 ## Evaluation
 
-Validated across 25 labeled test cases spanning all 11 scenarios plus adversarial crisis inputs: 92% correct primary classification. 
+Validated across 25 labeled test cases spanning all 11 scenarios plus adversarial crisis inputs: 92% correct primary classification.
 
 Bias testing: Anchor was tested across terse low-literacy input, African American Vernacular English, and mixed Spanish-English, and correctly interpreted non-standard grammar, routing each to the right situation. Ambiguous input routes to a human via the confidence gate.
 
